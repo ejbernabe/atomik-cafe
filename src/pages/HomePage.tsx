@@ -16,7 +16,7 @@ const SLIDES: Slide[] = [
     title: 'Artisanal Coffee & Fresh Bakes',
     subtitle: 'Hand-crafted beverages made with locally roasted beans every single day.',
     ctaText: 'View Menu',
-    ctaLink: '#menu',
+    ctaLink: '/menu',
   },
   {
     id: 2,
@@ -24,7 +24,7 @@ const SLIDES: Slide[] = [
     title: 'Cozy Atmosphere, Modern Vibe',
     subtitle: 'Find your perfect spot to work, relax, or catch up with friends.',
     ctaText: 'Find Locations',
-    ctaLink: '#locations',
+    ctaLink: '/about',
   },
   {
     id: 3,

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PromoModal, { type PromoItem } from '../components/PromoModal';
+import PageHeader from '../components/PageHeader';
 
 export default function PromoPage() {
   const [selectedPromo, setSelectedPromo] = useState<PromoItem | null>(null);
@@ -14,17 +15,11 @@ export default function PromoPage() {
     <div className="py-12 px-4 sm:px-6 bg-bg-base text-text-body min-h-screen">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-10">
-          <span className="inline-block text-xs font-bold text-badge-text uppercase tracking-widest bg-badge px-3.5 py-1 rounded-full shadow-sm">
-            Atomik Specials
-          </span>
-          <h1 className="text-3xl font-black text-text-heading mt-3 sm:text-4xl tracking-tight">
-            Weekly Deals Schedule
-          </h1>
-          <p className="text-text-muted font-medium text-sm mt-2 max-w-md mx-auto">
-            Plan your visits around our recurring weekly offers and daily specials.
-          </p>
-        </div>
+        <PageHeader
+          badge="Atomik Promos"
+          title="Weekly Deals Schedule"
+          description="Plan your visits around our recurring weekly offers and daily specials."
+        />
 
         {/* Encapsulated Scrollable Card Container */}
         <div className="max-h-150 overflow-y-auto pr-2 space-y-4 scrollbar-thin scrollbar-thumb-border scrollbar-track-bg-surface">
