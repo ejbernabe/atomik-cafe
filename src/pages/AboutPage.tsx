@@ -97,9 +97,10 @@ export default function AboutPage() {
   const [selectedBranchForModal, setSelectedBranchForModal] = useState<Branch | null>(null);
 
   return (
-    <section className="w-full max-w-6xl mx-auto px-4 py-12">
+    <section className="px-4 sm:px-6 bg-bg-base text-text-body min-h-screen">
       {/* Header */}
       <PageHeader
+        badge="Atomik Branches"
         title="Our Locations"
         description="Visit us at any of our 2 branches or order ahead."
       />

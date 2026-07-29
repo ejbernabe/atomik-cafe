@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import PromoPage from './pages/PromoPage';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
+import MenuPage from './pages/MenuPage';
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
       <main className="max-w-7xl mx-auto px-4 py-12">
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/menu" element={<MenuPage />} />
           <Route path="/promos" element={<PromoPage />} />
           <Route path="/about" element={<AboutPage />} />
         </Routes>

@@ -15,7 +15,6 @@ const NAV_LINKS = {
     { label: 'Home', to: '/homeStore' },
     { label: 'Products', to: '/products' },
     { label: 'Paiwan', to: '/paiwan' },
-    { label: 'Cart', to: '/cart' },
     { label: 'About', to: '/about' },
   ]
 };
@@ -26,7 +25,7 @@ export default function Navbar() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
 
-  const navigate = useNavigate(); // Hook for programmatic navigation
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.title = brand === 'cafe' ? 'Atomik | Cafe' : 'Atomik | Store';
@@ -39,7 +38,6 @@ export default function Navbar() {
       setBrand(nextBrand);
       setIsTransitioning(false);
 
-      // Programmatically navigate to the respective home page
       navigate(nextBrand === 'cafe' ? '/' : '/homeStore');
     }, 150); 
   };
@@ -90,7 +88,7 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* Desktop Links */}
+            {/* Desktop Navigation Links */}
             <div className="hidden md:flex items-center space-x-8 text-sm font-medium">
               <div
                 className={`flex items-center space-x-8 transition-all duration-200 ${
@@ -116,7 +114,26 @@ export default function Navbar() {
             </div>
 
             {/* Right Action Buttons */}
-            <div className="hidden md:flex items-center space-x-4">
+            <div className="hidden md:flex items-center space-x-3">
+              {/* Cart Button (Store Mode Only) */}
+              {brand === 'store' && (
+                <Link
+                  to="/cart"
+                  className="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-text-muted hover:text-text-heading hover:bg-bg-sunken rounded-lg transition-colors"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                    />
+                  </svg>
+                  <span>Cart</span>
+                </Link>
+              )}
+
+              {/* Login Button */}
               <button
                 type="button"
                 onClick={() => setIsLoginOpen(true)}
@@ -177,6 +194,25 @@ export default function Navbar() {
 
             {/* Mobile Action Buttons */}
             <div className="pt-4 border-t border-border flex flex-col space-y-2">
+              {/* Mobile Cart Button (Store Mode Only) */}
+              {brand === 'store' && (
+                <Link
+                  to="/cart"
+                  onClick={() => setIsOpen(false)}
+                  className="w-full flex items-center justify-center gap-2 text-center text-sm font-semibold text-text-heading bg-bg-sunken hover:bg-border-subtle transition-colors px-4 py-2 rounded-lg"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                    />
+                  </svg>
+                  <span>Cart</span>
+                </Link>
+              )}
+
               <button
                 type="button"
                 onClick={() => {

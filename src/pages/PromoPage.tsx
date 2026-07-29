@@ -12,7 +12,7 @@ export default function PromoPage() {
   ];
 
   return (
-    <div className="py-12 px-4 sm:px-6 bg-bg-base text-text-body min-h-screen">
+    <div className="px-4 sm:px-6 bg-bg-base text-text-body min-h-screen">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <PageHeader
