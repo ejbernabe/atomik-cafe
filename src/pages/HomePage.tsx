@@ -1,40 +1,5 @@
 import { useState, useEffect } from 'react';
-
-interface Slide {
-  id: number;
-  image: string;
-  title: string;
-  subtitle: string;
-  ctaText?: string;
-  ctaLink?: string;
-}
-
-const SLIDES: Slide[] = [
-  {
-    id: 1,
-    image: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=1920&auto=format&fit=crop',
-    title: 'Artisanal Coffee & Fresh Bakes',
-    subtitle: 'Hand-crafted beverages made with locally roasted beans every single day.',
-    ctaText: 'View Menu',
-    ctaLink: '/menu',
-  },
-  {
-    id: 2,
-    image: 'https://images.unsplash.com/photo-1442512595331-e89e73853f31?q=80&w=1920&auto=format&fit=crop',
-    title: 'Cozy Atmosphere, Modern Vibe',
-    subtitle: 'Find your perfect spot to work, relax, or catch up with friends.',
-    ctaText: 'Find Locations',
-    ctaLink: '/about',
-  },
-  {
-    id: 3,
-    image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1920&auto=format&fit=crop',
-    title: 'Weekly Specials & Promotions',
-    subtitle: 'Discover our rotating seasonal syrups and exclusive daily discounts.',
-    ctaText: 'Explore Promos',
-    ctaLink: '/promos',
-  },
-];
+import { SLIDES } from '../data/HomeData';
 
 export default function HomePage() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -63,11 +28,11 @@ export default function HomePage() {
 
   return (
     <div
-      className="relative w-full h-[70vh] min-h-112.5 max-h-200 overflow-hidden bg-black group"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
+      className="relative w-full h-[70vh] min-h-112.5 max-h-200 overflow-hidden bg-black group cursor-default"
+      // onMouseEnter={() => setIsPaused(true)}
+      // onMouseLeave={() => setIsPaused(false)}
     >
-      {/* Slide Images */}
+      {/* Slides */}
       {SLIDES.map((slide, index) => {
         const isActive = index === currentIndex;
 
@@ -78,7 +43,6 @@ export default function HomePage() {
               isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
             }`}
           >
-            {/* Landscape Background Image */}
             <img
               src={slide.image}
               alt={slide.title}
@@ -159,7 +123,7 @@ export default function HomePage() {
         </svg>
       </button>
 
-      {/* Bottom Indicator Dots */}
+      {/* Indicator Dots */}
       <div className="absolute bottom-6 left-0 right-0 z-20 flex justify-center items-center gap-2">
         {SLIDES.map((_, index) => (
           <button

@@ -1,77 +1,7 @@
 import { useState } from 'react';
 import PageHeader from '../components/PageHeader';
 
-interface Branch {
-  id: string;
-  name: string;
-  tagline: string;
-  address: string;
-  phone: string;
-  mapImageUrl: string;
-  googleMapsUrl: string;
-  // Structured schedule for calculation
-  schedule: {
-    days: string;
-    hoursDisplay: string;
-    // Open/Close hours in 24-hour format [openHour, closeHour]
-    daysOfWeek: number[]; // 0 = Sun, 1 = Mon, ..., 6 = Sat
-    openHour: number;
-    closeHour: number; // Use 24 for midnight
-  }[];
-}
-
-const BRANCHES: Branch[] = [
-  {
-    id: 'branch-dahlia',
-    name: 'Atomik Dahlia Branch',
-    tagline: 'Flagship Store & Coffee Roastery',
-    address: '6 Falcon St, Quezon City, 1127 Metro Manila',
-    phone: '+1 (555) 019-2834',
-    mapImageUrl: '/branch-dahlia.jpg',
-    googleMapsUrl: 'https://maps.google.com/?q=Atomik+Cafe+Dahlia',
-    schedule: [
-      {
-        days: 'Monday - Friday',
-        hoursDisplay: '9:00 AM - 10:00 PM',
-        daysOfWeek: [1, 2, 3, 4, 5],
-        openHour: 9,
-        closeHour: 22,
-      },
-      {
-        days: 'Saturday - Sunday',
-        hoursDisplay: '9:00 AM - 12:00 AM',
-        daysOfWeek: [0, 6],
-        openHour: 9,
-        closeHour: 24, // Midnight
-      },
-    ],
-  },
-  {
-    id: 'branch-regalado',
-    name: 'Atomik Regalado Branch',
-    tagline: 'Express Cafe & Bakery',
-    address: '87 Regalado Hwy, Novaliches, Quezon City, Metro Manila',
-    phone: '+1 (555) 014-9821',
-    mapImageUrl: '/branch-regalado.jpg',
-    googleMapsUrl: 'https://maps.google.com/?q=Atomik+Cafe+Regalado',
-    schedule: [
-      {
-        days: 'Monday - Saturday',
-        hoursDisplay: '9:00 AM - 9:00 PM',
-        daysOfWeek: [1, 2, 3, 4, 5, 6],
-        openHour: 9,
-        closeHour: 21,
-      },
-      {
-        days: 'Sunday',
-        hoursDisplay: 'Closed',
-        daysOfWeek: [0],
-        openHour: 0,
-        closeHour: 0,
-      },
-    ],
-  },
-];
+import { BRANCHES, type Branch } from '../data/AboutData';
 
 // Helper to determine if a branch is currently open
 function getBranchStatus(schedule: Branch['schedule']): { isOpen: boolean; text: string } {
@@ -207,30 +137,29 @@ export default function AboutPage() {
 
       {/* Internal Operating Hours Modal */}
       {selectedBranchForModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fadeIn">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-fadeIn">
           {/* Backdrop Click Handler */}
           <div
-            className="absolute inset-0"
+            className="fixed inset-0"
             onClick={() => setSelectedBranchForModal(null)}
           />
-
           {/* Modal Container */}
-          <div className="relative w-full max-w-md bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl z-10 text-white">
+          <div className="relative w-full max-w-md bg-bg-surface border border-border rounded-2xl p-6 shadow-2xl z-10 text-text-body">            
             {/* Modal Title */}
             <div className="mb-6">
               <span className="text-xs font-semibold uppercase tracking-wider text-amber-500">
                 Operating Schedule
               </span>
-              <h3 className="text-xl text-zinc-200 font-bold mt-1">{selectedBranchForModal.name}</h3>
-              <p className="text-xs text-zinc-400 mt-1">{selectedBranchForModal.address}</p>
+              <h3 className="text-xl text-text-heading font-bold mt-1">{selectedBranchForModal.name}</h3>
+              <p className="text-xs text-text-muted mt-1">{selectedBranchForModal.address}</p>
             </div>
 
             {/* Schedule List */}
-            <div className="space-y-3 border-t border-b border-zinc-800 py-4">
+            <div className="space-y-3 border-t border-b border-border py-4">
               {selectedBranchForModal.schedule.map((slot, index) => (
                 <div key={index} className="flex justify-between items-center text-sm">
-                  <span className="text-zinc-300 font-medium">{slot.days}</span>
-                  <span className="text-amber-400 font-mono text-xs">{slot.hoursDisplay}</span>
+                  <span className="text-text-body font-medium">{slot.days}</span>
+                  <span className="text-gray-700 font-mono text-xs">{slot.hoursDisplay}</span>
                 </div>
               ))}
             </div>
@@ -239,7 +168,7 @@ export default function AboutPage() {
             <div className="mt-6">
               <button
                 onClick={() => setSelectedBranchForModal(null)}
-                className="w-full bg-zinc-900 hover:bg-zinc-800 text-white font-medium py-2 rounded-lg border border-zinc-700 transition-colors cursor-pointer text-sm"
+                className="w-full py-2.5 px-4 rounded-xl font-bold text-sm bg-badge text-badge-text hover:opacity-90 transition-opacity cursor-pointer"
               >
                 Close
               </button>

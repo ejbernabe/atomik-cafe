@@ -1,15 +1,10 @@
 import { useState } from 'react';
-import PromoModal, { type PromoItem } from '../components/PromoModal';
+import PromoModal from '../components/PromoModal';
 import PageHeader from '../components/PageHeader';
+import { SCHEDULES, type PromoItem } from '../data/PromoData';
 
 export default function PromoPage() {
   const [selectedPromo, setSelectedPromo] = useState<PromoItem | null>(null);
-
-  const schedule: PromoItem[] = [
-    { id: 'schedule0', day: 'All Week', promo: '@/Free Drink', deal: 'Get 1 Spanish Latte or 1 Strawberry Milk.', time: 'All Day', img: '/promo-tag.jpg' },
-    { id: 'schedule1', day: 'Monday', promo: 'Free Upsize', deal: 'Buy any drink and get a free upsize.', time: 'All Day', img: '/promo-big-cup.jpg' },
-    { id: 'schedule2', day: 'Friday', promo: 'Buy 2 & Get 1 Free', deal: 'Buy 2 drinks and get 1 FREE.', time: 'All Day', img: '/promo-b2t1.jpg' },
-  ];
 
   return (
     <div className="px-4 sm:px-6 bg-bg-base text-text-body min-h-screen">
@@ -23,7 +18,7 @@ export default function PromoPage() {
 
         {/* Encapsulated Scrollable Card Container */}
         <div className="max-h-150 overflow-y-auto pr-2 space-y-4 scrollbar-thin scrollbar-thumb-border scrollbar-track-bg-surface">
-          {schedule.slice(0, 10).map((item, idx) => (
+          {SCHEDULES.slice(0, 10).map((item, idx) => (
             <div 
               key={item.id || idx} 
               onClick={() => setSelectedPromo(item)}
