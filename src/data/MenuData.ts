@@ -1,14 +1,16 @@
 export interface MenuItem {
-  name: string;
-  id: string;
-  description?: string;
-  variant: {
-    label: string,
-    price: string,
-  }[];
-  category: string;
-  subCategory?: string;
-  isPopular?: boolean;
+  availability: boolean
+  badge: string | null
+  category_id: number
+  description: string | null
+  id: number
+  img: string | null
+  is_popular: boolean | null
+  name: string
+  opt_addons: number[] | null
+  req_addons: number[] | null
+  sub_category_: number | null
+  variant: JSON
 }
 
 export interface NewMenuItem extends MenuItem {
@@ -127,3 +129,10 @@ export const FULL_MENU: MenuItem[] = [
     subCategory: 'Classic Iced',
   },
 ]
+export interface AddOns {
+  name: string;
+  variant: {
+    label: string,
+    price: string,
+  }[];
+}
