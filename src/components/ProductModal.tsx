@@ -1,104 +1,128 @@
-import { useMemo } from 'react';
-import { FULL_MENU } from '../data/MenuData'; // Adjust path if needed
+import { useState, useEffect } from 'react';
+import type { Product } from '../data/database';
+import { getOptionalAddons, getRequiredAddons } from '../services/products';
 
 interface ProductModalProps {
-  isOpen: boolean;
+  product: Product | null;
+  categoryName: string;
   onClose: () => void;
-  productId: string | null;
 }
 
-export default function ProductModal({
-  isOpen,
-  onClose,
-  productId,
-}: ProductModalProps) {
-  // Look up the selected product from your data
-  const product = useMemo(() => {
-    if (!productId) return null;
-    return FULL_MENU.find((item) => item.id === productId) || null;
-  }, [productId]);
+export default function ProductModal({ product, categoryName, onClose }: ProductModalProps) {
+  const [optionalAddons, setOptionalAddons] = useState<any[]>([]);
+  const [requiredAddons, setRequiredAddons] = useState<any[]>([]);
 
-  // Don't render anything if modal is closed or product is missing
-  if (!isOpen || !product) return null;
+  useEffect(() => {
+    async function fetchAddons() {
+      if (!product) {
+        setOptionalAddons([]);
+        setRequiredAddons([]);
+        return;
+      }
+
+      try {
+        const [optional, required] = await Promise.all([
+          getOptionalAddons(product.id),
+          getRequiredAddons(product.id),
+        ]);
+
+        setOptionalAddons(Array.isArray(optional) ? optional : []);
+        setRequiredAddons(Array.isArray(required) ? required : []);
+      } catch (error) {
+        console.error('Failed to fetch addons:', error);
+        setOptionalAddons([]);
+        setRequiredAddons([]);
+      }
+    }
+
+    fetchAddons();
+  }, [product]);
+
+  if (!product) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop / Overlay (Click outside to close) */}
-      <div
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
-      />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={onClose}>
+      <div 
+        className="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-lg w-full p-6 relative shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-10 text-zinc-400 hover:text-white bg-zinc-800/80 hover:bg-zinc-800 rounded-full p-2 transition-colors cursor-pointer"
+        >
+          ✕
+        </button>
+        
+        {product.img && (
+          <div className="w-full flex items-center justify-center overflow-hidden rounded-xl p-2">
+            <img 
+              src={product.img} 
+              alt={product.name} 
+              className="w-auto h-auto max-h-[50vh] max-w-full object-contain rounded-lg" 
+            />
+          </div>
+        )}
 
-      {/* Modal Container */}
-      <div className="relative w-full max-w-lg bg-bg-surface border border-border rounded-2xl shadow-2xl overflow-hidden z-10 flex flex-col max-h-[90vh]">
-        {/* Header with Close Button */}
-        <div className="flex items-center justify-between p-5 border-b border-border">
-          {/* Close Button */}
-          <button
-            onClick={onClose}
-            type="button"
-            className="absolute top-4 right-4 text-text-muted hover:text-text-heading p-1 rounded-lg transition-colors cursor-pointer"
-          >
-            ✕
-          </button>
+        <div>
+          <span className="text-xs font-medium text-amber-500 uppercase tracking-wider">
+            {categoryName}
+          </span>
+          <h3 className="text-xl font-bold text-white mt-1">{product.name}</h3>
+          {product.description && (
+            <p className="text-sm text-zinc-400 mt-2 leading-relaxed">{product.description}</p>
+          )}
+        </div>
 
-          <div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-amber-500">
-              {product.category}
-            </span>
-            <h3 className="text-xl text-text-heading font-bold mt-1">
-              {product.name}
-            </h3>
+        {/* Variants / Prices in Modal */}
+        <div className="border-t border-zinc-800 pt-4 space-y-2">
+          <h4 className="text-xs font-semibold text-zinc-400 uppercase">Variants & Pricing</h4>
+          <div className="space-y-1.5">
+            {Array.isArray(product.variant) &&
+              product.variant.map((v, idx) => (
+                <div key={idx} className="flex justify-between items-center bg-zinc-950 px-3 py-2 rounded-lg border border-zinc-800/50 text-sm">
+                  <span className="text-zinc-300">{v.label || 'Standard'}</span>
+                  <span className="font-bold text-amber-400">{v.price}</span>
+                </div>
+              ))}
           </div>
         </div>
 
-        {/* Modal Body */}
-        <div className="p-5 space-y-4 overflow-y-auto">
-          {product.description && (
-            <p className="text-sm text-zinc-300 leading-relaxed">
-              {product.description}
-            </p>
-          )}
-
-          {/* Pricing & Variants Section */}
-          <div className="bg-zinc-900/60 border border-zinc-800 p-4 rounded-xl space-y-2">
-            <h4 className="text-xs font-medium text-zinc-400 uppercase tracking-wide">
-              Pricing & Sizes
-            </h4>
+        {/* Required Addons */}
+        {requiredAddons.length > 0 && (
+          <div className="border-t border-zinc-800 pt-4 space-y-2">
+            <h4 className="text-xs font-semibold text-amber-400 uppercase">Required Addons</h4>
             <div className="space-y-1.5">
-              {product.variant && product.variant.length > 0 ? (
-                product.variant.map((v, idx) => (
-                  <div
-                    key={idx}
-                    className="flex justify-between items-center text-sm"
-                  >
-                    <span className="text-zinc-300 font-medium">
-                      {v.label || 'Standard'}
-                    </span>
-                    <span className="text-amber-500 font-bold">{v.price}</span>
-                  </div>
-                ))
-              ) : (
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-zinc-300">Price</span>
-                  <span className="text-amber-500 font-bold">
-                    {/* Fallback if variant isn't an array */}
-                    {(product.variant as any)?.price || 'N/A'}
-                  </span>
+              {requiredAddons.map((addon, idx) => (
+                <div key={idx} className="flex justify-between items-center bg-zinc-950 px-3 py-2 rounded-lg border border-zinc-800/50 text-sm">
+                  <span className="text-zinc-300">{addon.label}</span>
+                  <span className="font-bold text-amber-400">{addon.price}</span>
                 </div>
-              )}
+              ))}
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Footer Action Button */}
-        <div className="p-5 border-t border-zinc-800/80 flex justify-end">
+        {/* Optional Addons */}
+        {optionalAddons.length > 0 && (
+          <div className="border-t border-zinc-800 pt-4 space-y-2">
+            <h4 className="text-xs font-semibold text-zinc-400 uppercase">Optional Addons</h4>
+            <div className="space-y-1.5">
+              {optionalAddons.map((addon, idx) => (
+                <div key={idx} className="flex justify-between items-center bg-zinc-950 px-3 py-2 rounded-lg border border-zinc-800/50 text-sm">
+                  <span className="text-zinc-300">{addon.label}</span>
+                  <span className="font-bold text-amber-400">{addon.price}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="pt-2">
           <button
             onClick={onClose}
-            type="button"
-            className="w-full sm:w-auto px-5 py-2.5 bg-amber-800 hover:bg-amber-700 text-white font-medium text-sm rounded-xl transition-all cursor-pointer shadow-lg shadow-amber-900/20"
+            className="w-full py-2.5 bg-amber-600 hover:bg-amber-500 text-white font-semibold rounded-xl transition-colors cursor-pointer"
           >
-            Add to Cart
+            Close
           </button>
         </div>
       </div>
