@@ -87,7 +87,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
       {/* 1. Main Cart View */}
       {step === 'cart' && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
           onClick={handleCloseAll}
         >
           <div
