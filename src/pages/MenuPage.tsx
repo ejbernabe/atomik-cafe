@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 // import PageHeader from '../components/PageHeader';
 import { PageHeader, ToastError, LoadingMessage } from "../components/Common";
 import ProductModal from '../components/ProductModal';
-import type { Product, DBTable } from '../data/database';
+import type { Product, DBTable } from '../types/custom';
 import { getAvailableProducts, getCategories, getSubCategories } from '../services/products';
 import { convertPriceToString, convertStringToPrice } from '../lib/utils';
 

@@ -1,30 +1,69 @@
 import { useState, useEffect } from 'react';
-import { SLIDES } from '../data/HomeData';
+import { LoadingMessage, ToastError } from '../components/Common';
+import type { DBTable } from '../types/custom';
+import { getHomeHeroes } from '../services/landingPage';
 
 export default function HomePage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Auto-play logic (change slide every 5 seconds)
+  const [homeHeroes, setHomeHeroes] = useState<DBTable<'landing_page'>[]>([]);
+
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // 1. Separate Effect for Fetching Data
   useEffect(() => {
-    if (isPaused) return;
+    async function loadData() {
+      try {
+        setLoading(true);
+        const homeHeroesData = await getHomeHeroes();
+
+        // console.log('Fetched homeHeroesData:', homeHeroesData); // Correct log
+        setHomeHeroes(homeHeroesData || []);
+      } catch (err: any) {
+        console.error('Error fetching data:', err);
+        setError('Failed to load components. Please refresh and try again.');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadData();
+  }, []); // Runs once on mount
+
+  // 2. Separate Effect for Auto-Slide Timer
+  useEffect(() => {
+    if (isPaused || homeHeroes.length === 0) return;
 
     const timer = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % SLIDES.length);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % homeHeroes.length);
     }, 2500);
 
     return () => clearInterval(timer);
-  }, [isPaused]);
+  }, [isPaused, homeHeroes.length]);
 
   const prevSlide = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? SLIDES.length - 1 : prevIndex - 1
+      prevIndex === 0 ? homeHeroes.length - 1 : prevIndex - 1
     );
   };
 
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % SLIDES.length);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % homeHeroes.length);
   };
+
+  if(loading) {
+    return (
+      <LoadingMessage message="Loading Components "></LoadingMessage>
+    );
+  }
+
+  if(error) {
+    return (
+      <ToastError message={error}></ToastError>
+    );
+  }
 
   return (
     <div
@@ -33,7 +72,7 @@ export default function HomePage() {
       // onMouseLeave={() => setIsPaused(false)}
     >
       {/* Slides */}
-      {SLIDES.map((slide, index) => {
+      {homeHeroes.map((slide, index) => {
         const isActive = index === currentIndex;
 
         return (
@@ -45,7 +84,7 @@ export default function HomePage() {
           >
             <img
               src={slide.image}
-              alt={slide.title}
+              alt={slide.title ? slide.title : ""}
               className="w-full h-full object-cover object-center"
             />
 
@@ -125,7 +164,7 @@ export default function HomePage() {
 
       {/* Indicator Dots */}
       <div className="absolute bottom-6 left-0 right-0 z-20 flex justify-center items-center gap-2">
-        {SLIDES.map((_, index) => (
+        {homeHeroes.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}

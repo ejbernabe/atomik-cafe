@@ -1,42 +1,3 @@
-// Custom Types
-export interface ProductVariant {
-  label?: string;
-  price: string;
-}
-
-export interface Product {
-  id: number;
-  name: string;
-  description: string | null;
-  img: string | null;
-  badge: string | null;
-  category_id: number;
-  sub_category_: number | null;
-  is_popular: boolean | null;
-  availability: boolean;
-  opt_addons: number[] | null;
-  req_addons: number[] | null;
-  variant: ProductVariant[] | null;
-}
-
-export interface Addon {
-  id: string | number;
-  label: string;
-  price: string | number;
-}
-
-export interface Cart {
-  type: "CAFE" | "STORE",
-  total_price: number,
-  products: Product[]
-}
-
-
-export type DBTable<T extends keyof Database['public']['Tables']> =
-  Database['public']['Tables'][T]['Row'];
-
-
-// This file was generated from the Supabase CLI. Do not edit it manually. Instead, use the Supabase CLI to update this file.
 export type Json =
   | string
   | number
@@ -76,31 +37,31 @@ export type Database = {
       }
       branches: {
         Row: {
-          address: string | null
+          address: string
           contact_number: string | null
-          google_map_url: string | null
+          google_map_url: string
           id: number
-          map_img: string | null
+          map_img: string
           name: string | null
           schedule: Json | null
           tagline: string | null
         }
         Insert: {
-          address?: string | null
+          address: string
           contact_number?: string | null
-          google_map_url?: string | null
+          google_map_url: string
           id?: number
-          map_img?: string | null
+          map_img: string
           name?: string | null
           schedule?: Json | null
           tagline?: string | null
         }
         Update: {
-          address?: string | null
+          address?: string
           contact_number?: string | null
-          google_map_url?: string | null
+          google_map_url?: string
           id?: number
-          map_img?: string | null
+          map_img?: string
           name?: string | null
           schedule?: Json | null
           tagline?: string | null
@@ -122,6 +83,33 @@ export type Database = {
           id?: number
           label?: string
           sub_category_ids?: number[] | null
+        }
+        Relationships: []
+      }
+      landing_page: {
+        Row: {
+          ctaLink: string
+          ctaText: string
+          id: number
+          image: string
+          subtitle: string | null
+          title: string | null
+        }
+        Insert: {
+          ctaLink: string
+          ctaText: string
+          id?: number
+          image: string
+          subtitle?: string | null
+          title?: string | null
+        }
+        Update: {
+          ctaLink?: string
+          ctaText?: string
+          id?: number
+          image?: string
+          subtitle?: string | null
+          title?: string | null
         }
         Relationships: []
       }

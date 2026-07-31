@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { type DBTable } from "../data/database";
+import { type DBTable } from "../types/custom";
 
 interface PromoModalProps {
   item: DBTable<'promos'>;

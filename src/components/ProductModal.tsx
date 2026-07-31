@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import type { Product, Addon } from '../data/database';
+import type { Product, Addon } from '../types/custom';
 import { getOptionalAddons, getRequiredAddons } from '../services/products';
 import { convertPriceToString, convertStringToPrice } from '../lib/utils';
-import { addToCart, getCart, type CartItem } from '../lib/cartUtil';
+import { addToCart, getCart } from '../lib/cartUtil';
+import { type CartItem } from '../types/custom';
 import { useCart } from '../lib/useCart';
 
 interface ProductModalProps {

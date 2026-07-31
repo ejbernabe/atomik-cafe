@@ -3,7 +3,7 @@ import PromoModal from '../components/PromoModal';
 import { PageHeader, ToastError, LoadingMessage } from '../components/Common';
 // import { SCHEDULES, type PromoItem } from '../data/PromoData';
 import { getPromos } from '../services/promos';
-import { type DBTable } from '../data/database';
+import { type DBTable } from '../types/custom';
 
 
 export default function PromoPage() {

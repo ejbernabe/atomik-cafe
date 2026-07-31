@@ -1,14 +1,14 @@
 import { supabase } from '../lib/supabaseClient';
 import type { DBTable } from '../types/custom';
 
-export async function getPromos(): Promise<DBTable<'promos'>[]> {
+export async function getHomeHeroes(): Promise<DBTable<'landing_page'>[]> {
   const { data, error } = await supabase
-    .from('promos')
+    .from('landing_page')
     .select('*')
 
   if (error) {
     throw error;
   }
 
-  return (data as DBTable<'promos'>[]) || [];
+  return (data as DBTable<'landing_page'>[]) || [];
 }

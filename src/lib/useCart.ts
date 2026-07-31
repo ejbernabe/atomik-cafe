@@ -1,6 +1,7 @@
 // lib/useCart.ts
 import { useState, useEffect } from 'react';
-import { getCart, type CartItem } from './cartUtil';
+import { getCart } from './cartUtil';
+import { type CartItem } from '../types/custom';
 
 export function useCart(): CartItem[] {
   const [cart, setCart] = useState<CartItem[]>(() => getCart());

@@ -1,15 +1,4 @@
-import type { Addon } from '../data/database';
-
-export interface CartItem {
-  cartItemId: string;
-  cartItemPrice: number;
-  id: number | string;
-  name: string;
-  quantity: number;
-  variant?: any;
-  opt_addons?: Addon[];
-  req_addons?: Addon[];
-}
+import type { CartItem } from '../types/custom';
 
 // 1. Storage Helpers
 export const getCart = (): CartItem[] => {

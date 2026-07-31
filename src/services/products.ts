@@ -1,6 +1,6 @@
 // src/services/productService.ts (or src/lib/products.ts)
 import { supabase } from '../lib/supabaseClient';
-import type { Product, DBTable } from '../data/database'; // Adjust path to your Product interface
+import type { Product, DBTable } from '../types/custom'; // Adjust path to your Product interface
  // Assuming you have a Database type defined in your database.ts
 /**
  * Fetches all available products from the database

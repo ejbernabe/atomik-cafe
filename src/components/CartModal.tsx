@@ -5,9 +5,9 @@ import {
   updateCartQuantity, 
   removeFromCart, 
   clearCart, 
-  type CartItem, 
   getCart
 } from '../lib/cartUtil';
+import { type CartItem } from '../types/custom';
 import { convertPriceToString } from '../lib/utils';
 
 interface CartModalProps {
