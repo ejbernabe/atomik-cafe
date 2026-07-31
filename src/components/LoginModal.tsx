@@ -34,7 +34,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           ✕
         </button>
 
-        <h2 className="text-amber-400 text-2xl font-bold  mb-1">Welcome back</h2>
+        <h2 className="text-amber-400 text-2xl font-bold mb-1">Welcome back</h2>
         <p className="text-white text-sm mb-6">Sign in to your account</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">

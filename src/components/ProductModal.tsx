@@ -28,6 +28,8 @@ export default function ProductModal({ product, categoryName, onClose }: Product
 
   const [quantity, setQuantity] = useState(1);
 
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
   useEffect(() => {
     async function fetchAddons() {
       if (!product) {
@@ -84,7 +86,16 @@ export default function ProductModal({ product, categoryName, onClose }: Product
       req_addon: selectedRequiredAddon
     });
 
-    if (onClose) onClose();
+    // 2. Set the success alert message
+    setToastMessage(`${quantity}x ${product.name} is successfully added to cart`);
+
+    // 3. Wait briefly so the user can see the alert, then close the modal
+    setTimeout(() => {
+      setToastMessage(null);
+      // if (onClose) onClose();
+    }, 2500);
+
+    
   };
 
   // 🛑 MOVE THIS BELOW ALL HOOKS
@@ -126,6 +137,16 @@ export default function ProductModal({ product, categoryName, onClose }: Product
 
   return (
     <div className="cursor-default fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={onClose}>
+      {/* Tailwind Floating Alert Banner */}
+      {toastMessage && (
+        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 bg-emerald-600 text-white text-sm font-medium px-4 py-3 rounded-xl shadow-lg border border-emerald-500/30 animate-bounce">
+          <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>{toastMessage}</span>
+        </div>
+      )}
+      
       <div 
         className="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-lg w-full p-6 relative shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
@@ -156,50 +177,6 @@ export default function ProductModal({ product, categoryName, onClose }: Product
             <p className="text-sm text-zinc-400 mt-2 leading-relaxed">{product.description}</p>
           )}
         </div>
-
-        {/* Variants / Prices in Modal */}
-        {/* <div className="border-t border-zinc-800  pt-4 space-y-2">
-          <h4 className="text-xs font-semibold text-zinc-400 uppercase">Variants & Pricing</h4>
-          <div className="space-y-1.5">
-            {Array.isArray(product.variant) &&
-              product.variant.map((v, idx) => (
-                <div key={idx} className="cursor-pointer flex justify-between items-center bg-zinc-950 hover:bg-zinc-800/50 px-3 py-2 rounded-lg border border-zinc-800/50 text-sm">
-                  <span className="text-zinc-300">{v.label || 'Standard'}</span>
-                  <span className="font-bold text-amber-400">{v.price}</span>
-                </div>
-              ))}
-          </div>
-        </div> */}
-
-        {/* Required Addons */}
-        {/* {requiredAddons.length > 0 && (
-          <div className="border-t border-zinc-800 pt-4 space-y-2">
-            <h4 className="text-xs font-semibold text-amber-400 uppercase">Required Addons</h4>
-            <div className="space-y-1.5">
-              {requiredAddons.map((addon, idx) => (
-                <div key={idx} className="cursor-pointer flex justify-between items-center bg-zinc-950 hover:bg-zinc-800/50 px-3 py-2 rounded-lg border border-zinc-800/50 text-sm">
-                  <span className="text-zinc-300">{addon.label}</span>
-                  <span className="font-bold text-amber-400">{addon.price}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )} */}
-
-        {/* Optional Addons */}
-        {/* {optionalAddons.length > 0 && (
-          <div className="border-t border-zinc-800 pt-4 space-y-2">
-            <h4 className="text-xs font-semibold text-zinc-400 uppercase">Optional Addons</h4>
-            <div className="space-y-1.5">
-              {optionalAddons.map((addon, idx) => (
-                <div key={idx} className="cursor-pointer flex justify-between items-center bg-zinc-950 hover:bg-zinc-800/50 px-3 py-2 rounded-lg border border-zinc-800/50 text-sm">
-                  <span className="text-zinc-300">{addon.label}</span>
-                  <span className="font-bold text-amber-400">{addon.price}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )} */}
 
         {Array.isArray(product.variant) &&
           product.variant.map((v, idx) => {
