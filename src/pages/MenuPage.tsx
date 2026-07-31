@@ -60,18 +60,26 @@ export default function MenuPage() {
     setSelectedProduct(product);
   };
 
-  if (loading) {
+  if(loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-bg-base text-white">
-        <p className="animate-pulse text-zinc-400">Loading menu...</p>
+        <p className="animate-pulse text-zinc-400 text-2xl">
+          Loading menu <span className="loading loading-dots loading-xl"></span>
+        </p>
       </div>
     );
   }
 
-  if (error) {
+  if(error) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-bg-base text-red-400">
-        <p>{error}</p>
+      // <div className="flex justify-center items-center min-h-screen bg-bg-base text-red-400">
+      //   <p>{error}</p>
+      // </div>
+      <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 bg-red-500 text-white text-sm font-medium px-4 py-3 rounded-xl shadow-lg border border-red-500/30">
+        <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>Failed to load menu data. Please refresh and try again.</span>
       </div>
     );
   }
@@ -237,7 +245,7 @@ export default function MenuPage() {
                       onClick={() => handleCategoryChange('All')}
                       className={`px-4 py-2 rounded-xl text-sm font-medium transition-all cursor-pointer ${
                         activeCategoryId === 'All'
-                          ? 'bg-amber-800 text-white shadow-md'
+                          ? 'bg-amber-600 text-white shadow-md'
                           : 'bg-zinc-900 text-zinc-400 hover:text-white hover:bg-zinc-800'
                       }`}
                     >

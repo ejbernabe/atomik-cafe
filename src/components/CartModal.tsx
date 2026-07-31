@@ -23,6 +23,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
   const [step, setStep] = useState<'cart' | 'checkout'>('cart');
   // Track state for encoded QR text
   const [qrData, setQrData] = useState<string>('');
+  const textArr: string[] = [];
 
   if (!isOpen) return null;
 
@@ -38,20 +39,20 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
   };
 
   const doneQR = () => {
-    onClose();
-    clearCart();
+    handleConfirmClear();
   }
 
   const handleConfirmClear = () => {
     clearCart();
     setShowClearConfirm(false);
+    handleCloseAll();
+    textArr.length = 0;
   };
 
   const handleCheckout = () => {
     const currentCart = getCart();
     // console.log('Proceeding to checkout with cart items:', currentCart);
 
-    const textArr: string[] = [];
     textArr.push("--- ORDER SUMMARY ---");
     textArr.push("Amount to Collect: " + convertPriceToString(totalAmount));
 
@@ -82,7 +83,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
   };
 
   return (
-    <>
+    <div>
       {/* 1. Main Cart View */}
       {step === 'cart' && (
         <div
@@ -327,6 +328,6 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
