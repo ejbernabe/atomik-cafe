@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { QRCodeSVG } from 'qrcode.react';
 import { useCart } from '../lib/useCart';
 import { 
   updateCartQuantity, 
@@ -20,6 +21,8 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
   
   // Track modal step: 'cart' | 'checkout'
   const [step, setStep] = useState<'cart' | 'checkout'>('cart');
+  // Track state for encoded QR text
+  const [qrData, setQrData] = useState<string>('');
 
   if (!isOpen) return null;
 
@@ -34,6 +37,11 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
     onClose();
   };
 
+  const doneQR = () => {
+    onClose();
+    clearCart();
+  }
+
   const handleConfirmClear = () => {
     clearCart();
     setShowClearConfirm(false);
@@ -41,9 +49,10 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
 
   const handleCheckout = () => {
     const currentCart = getCart();
-    console.log('Proceeding to checkout with cart items:', currentCart);
+    // console.log('Proceeding to checkout with cart items:', currentCart);
 
-    const textArr = [];
+    const textArr: string[] = [];
+    textArr.push("--- ORDER SUMMARY ---");
     textArr.push("Amount to Collect: " + convertPriceToString(totalAmount));
 
     for (let i = 0; i < currentCart.length; i++) {
@@ -67,7 +76,8 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
       textArr.push(text);
     }
 
-    // Advance to the placeholder modal view
+    // Convert array to a single multiline string for the QR Code
+    setQrData(textArr.join('\n'));
     setStep('checkout');
   };
 
@@ -206,26 +216,26 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
         </div>
       )}
 
-      {/* 2. Checkout / Placeholder Modal View */}
+      {/* 2. Checkout / QR View */}
       {step === 'checkout' && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
           onClick={handleCloseAll}
         >
           <div
-            className="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-lg w-full p-6 relative shadow-2xl flex flex-col max-h-[85vh]"
+            className="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-sm w-full p-6 relative shadow-2xl flex flex-col overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex justify-between items-center pb-4 border-b border-zinc-800">
+            <div className="flex justify-between items-center pb-3 border-b border-zinc-800 shrink-0">
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setStep('cart')}
-                  className="text-xs text-zinc-400 hover:text-white mr-1 transition-colors"
+                  className="text-xs text-zinc-400 hover:text-white transition-colors cursor-pointer"
                 >
                   ← Back
                 </button>
-                <h2 className="text-xl font-bold text-white">Checkout</h2>
+                <h2 className="text-lg font-bold text-white">Order Summary QR</h2>
               </div>
               <button
                 onClick={handleCloseAll}
@@ -235,21 +245,34 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
               </button>
             </div>
 
-            {/* Middle Content Placeholder Box */}
-            <div className="py-8 flex-1 flex flex-col items-center justify-center">
-              <div className="w-full h-48 border-2 border-dashed border-zinc-700 rounded-xl flex items-center justify-center bg-zinc-950/50 text-zinc-400">
-                <span className="text-sm font-medium">Placeholder Box</span>
+            {/* QR Code Section */}
+            <div className="py-4 flex flex-col items-center justify-center space-y-3 shrink-0">
+              <div className="p-3 bg-white rounded-xl shadow-lg border border-zinc-200 flex items-center justify-center">
+                <QRCodeSVG
+                  value={qrData}
+                  size={180}
+                  level="M"
+                  bgColor="#ffffff"
+                  fgColor="#000000"
+                />
+              </div>
+              
+              <div className="text-center space-y-0.5">
+                <p className="text-xs text-zinc-400">Show this code at the counter to place order</p>
+                <p className="text-sm font-bold text-amber-400">
+                  Total: {convertPriceToString(totalAmount)}
+                </p>
               </div>
             </div>
 
             {/* Footer */}
-            <div className="border-t border-zinc-800 pt-4 flex justify-end">
+            <div className="border-t border-zinc-800 pt-3 shrink-0">
               <button
                 type="button"
-                onClick={handleCloseAll}
-                className="px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white text-sm font-medium transition-colors"
+                onClick={doneQR}
+                className="w-full py-2.5 px-4 rounded-lg bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold text-sm transition-colors cursor-pointer text-center block"
               >
-                Close
+                Done
               </button>
             </div>
           </div>
