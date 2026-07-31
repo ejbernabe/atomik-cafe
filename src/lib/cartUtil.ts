@@ -1,83 +1,56 @@
-// lib/cartUtil.ts
+import type { Addon } from '../data/database';
 
 export interface CartItem {
   cartItemId: string;
-  id: string | number;
+  cartItemPrice: number;
+  id: number | string;
   name: string;
-  variantPrice: number;
   quantity: number;
-  variantLabel?: string;
-  addons?: { id?: string | number; name: string; price: number }[];
-  [key: string]: any;
+  variant?: any;
+  opt_addons?: Addon[];
+  req_addons?: Addon[];
 }
 
-const CART_KEY = 'shopping_cart';
-
+// 1. Storage Helpers
 export const getCart = (): CartItem[] => {
-  if (typeof window === 'undefined') return [];
   try {
-    const stored = localStorage.getItem(CART_KEY);
-    return stored ? JSON.parse(stored) : [];
+    const data = localStorage.getItem('cart');
+    if (!data) return [];
+    const parsed = JSON.parse(data);
+    return Array.isArray(parsed) ? parsed : [];
   } catch (error) {
-    console.error('Failed to read cart from localStorage', error);
+    console.error('Failed to parse cart:', error);
     return [];
   }
 };
 
-const saveCart = (cart: CartItem[]) => {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(CART_KEY, JSON.stringify(cart));
-  // Dispatch custom event for current tab re-rendering
-  window.dispatchEvent(new Event('cartUpdated'));
+export const saveCart = (cart: CartItem[]) => {
+  localStorage.setItem('cart', JSON.stringify(cart));
+  // Dispatch custom window event to sync state across useCart hooks
+  window.dispatchEvent(new Event('cart-updated'));
 };
 
-export const generateCartItemId = (
-  productId: string | number,
-  variantLabel?: string,
-  addons: any[] = []
-): string => {
-  const addonKey = addons
-    .map((a) => a.id ?? a.name)
-    .sort()
-    .join('-');
-  return `${productId}_${variantLabel || 'default'}_${addonKey}`;
-};
+// 2. Add To Cart
+export const addToCart = (newItem: CartItem) => {
+  const currentCart = getCart();
 
-export const addToCart = (
-  newItem: Omit<CartItem, 'cartItemId'> & { cartItemId?: string }
-) => {
-  const cart = getCart();
+  const existingIndex = currentCart.findIndex(
+    (item) => item.cartItemId === newItem.cartItemId
+  );
 
-  const targetCartItemId: string =
-    newItem.cartItemId ||
-    generateCartItemId(newItem.id, newItem.variantLabel, newItem.addons);
+  let updatedCart: CartItem[];
 
-  const existingIndex = cart.findIndex((item) => {
-    const itemKey =
-      item.cartItemId ||
-      generateCartItemId(item.id, item.variantLabel, item.addons);
-    return itemKey === targetCartItemId;
-  });
-
-  if (existingIndex > -1) {
-    cart[existingIndex].quantity += newItem.quantity || 1;
+  if (existingIndex !== -1) {
+    updatedCart = [...currentCart];
+    updatedCart[existingIndex] = newItem;
   } else {
-    const itemToAdd: CartItem = {
-      id: newItem.id,
-      name: newItem.name,
-      variantPrice: newItem.variantPrice,
-      variantLabel: newItem.variantLabel,
-      addons: newItem.addons || [],
-      ...newItem,
-      cartItemId: targetCartItemId,
-      quantity: newItem.quantity || 1,
-    };
-    cart.push(itemToAdd);
+    updatedCart = [...currentCart, newItem];
   }
 
-  saveCart(cart);
+  saveCart(updatedCart);
 };
 
+// 3. Update Item Quantity
 export const updateCartQuantity = (cartItemId: string, quantity: number) => {
   if (quantity <= 0) {
     removeFromCart(cartItemId);
@@ -86,11 +59,14 @@ export const updateCartQuantity = (cartItemId: string, quantity: number) => {
 
   const cart = getCart();
   const updatedCart = cart.map((item) => {
-    const itemKey =
-      item.cartItemId ||
-      generateCartItemId(item.id, item.variantLabel, item.addons);
-    if (itemKey === cartItemId) {
-      return { ...item, quantity };
+    if (item.cartItemId === cartItemId) {
+      // Recalculate price proportionally based on current unit price
+      const unitPrice = item.quantity > 0 ? item.cartItemPrice / item.quantity : 0;
+      return {
+        ...item,
+        quantity,
+        cartItemPrice: unitPrice * quantity,
+      };
     }
     return item;
   });
@@ -98,20 +74,14 @@ export const updateCartQuantity = (cartItemId: string, quantity: number) => {
   saveCart(updatedCart);
 };
 
+// 4. Remove Single Item
 export const removeFromCart = (cartItemId: string) => {
   const cart = getCart();
-  const updatedCart = cart.filter((item) => {
-    const itemKey =
-      item.cartItemId ||
-      generateCartItemId(item.id, item.variantLabel, item.addons);
-    return itemKey !== cartItemId;
-  });
-
+  const updatedCart = cart.filter((item) => item.cartItemId !== cartItemId);
   saveCart(updatedCart);
 };
 
+// 5. Clear Entire Cart
 export const clearCart = () => {
-  if (typeof window === 'undefined') return;
-  localStorage.removeItem(CART_KEY);
-  window.dispatchEvent(new Event('cartUpdated'));
+  saveCart([]);
 };

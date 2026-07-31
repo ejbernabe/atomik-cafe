@@ -6,21 +6,16 @@ export function useCart(): CartItem[] {
   const [cart, setCart] = useState<CartItem[]>(() => getCart());
 
   useEffect(() => {
-    // Initial sync
-    setCart(getCart());
-
-    const handleCartChange = () => {
+    const syncCart = () => {
       setCart(getCart());
     };
 
-    // Listen to custom event for same-tab updates
-    window.addEventListener('cartUpdated', handleCartChange);
-    // Listen to native event for cross-tab updates
-    window.addEventListener('storage', handleCartChange);
+    window.addEventListener('cart-updated', syncCart);
+    window.addEventListener('storage', syncCart);
 
     return () => {
-      window.removeEventListener('cartUpdated', handleCartChange);
-      window.removeEventListener('storage', handleCartChange);
+      window.removeEventListener('cart-updated', syncCart);
+      window.removeEventListener('storage', syncCart);
     };
   }, []);
 

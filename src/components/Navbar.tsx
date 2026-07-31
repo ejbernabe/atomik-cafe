@@ -33,6 +33,7 @@ export default function Navbar() {
   
   const cart = useCart();
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+  // const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   useEffect(() => {
     document.title = brand === 'cafe' ? 'Atomik | Cafe' : 'Atomik | Store';
