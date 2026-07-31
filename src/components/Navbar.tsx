@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import LoginModal from './LoginModal';
+import CartModal from './CartModal';
+
+import { useCart } from '../lib/useCart';
 
 type Mode = 'cafe' | 'store';
 
@@ -24,8 +27,12 @@ export default function Navbar() {
   const [brand, setBrand] = useState<Mode>('cafe');
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const navigate = useNavigate();
+  
+  const cart = useCart();
+  const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
 
   useEffect(() => {
     document.title = brand === 'cafe' ? 'Atomik | Cafe' : 'Atomik | Store';
@@ -115,13 +122,13 @@ export default function Navbar() {
 
             {/* Right Action Buttons */}
             <div className="hidden md:flex items-center space-x-3">
-              {/* Cart Button (Store Mode Only) */}
-              {brand === 'store' && (
-                <Link
-                  to="/cart"
-                  className="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-text-muted hover:text-text-heading hover:bg-bg-sunken rounded-lg transition-colors"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {/* Cart Button */}
+              <button
+                type="button"
+                onClick={() => setIsCartOpen(true)}
+                className="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-text-muted hover:text-text-heading hover:bg-bg-sunken rounded-lg cursor-pointer transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -129,9 +136,8 @@ export default function Navbar() {
                       d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
                     />
                   </svg>
-                  <span>Cart</span>
-                </Link>
-              )}
+                  <span>Cart ({totalItems})</span>
+              </button>
 
               {/* Login Button */}
               <button
@@ -231,6 +237,11 @@ export default function Navbar() {
       <LoginModal 
         isOpen={isLoginOpen} 
         onClose={() => setIsLoginOpen(false)} 
+      />
+
+      <CartModal 
+        isOpen={isCartOpen} 
+        onClose={() => setIsCartOpen(false)} 
       />
     </>
   );

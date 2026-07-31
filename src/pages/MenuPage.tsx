@@ -274,7 +274,7 @@ export default function MenuPage() {
                   return (
                     <div key={cat.id} className="mb-12">
                       {/* Sticky Category Divider Header */}
-                      <div className="sticky top-28 z-10 bg-bg-base/95 backdrop-blur-md py-3 flex items-center gap-3 mb-6 px-4 sm:px-6 -mx-4 sm:-mx-6">
+                      <div className="sticky top-30 z-10 bg-bg-base/95 backdrop-blur-md py-3 flex items-center gap-3 mb-6 px-4 sm:px-6 -mx-4 sm:-mx-6">
                         <div className="max-w-7xl mx-auto w-full flex items-center gap-3">
                           <h3 className="font-extrabold tracking-wider uppercase text-sm text-amber-500 whitespace-nowrap">
                             {cat.label}

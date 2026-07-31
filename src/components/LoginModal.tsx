@@ -24,22 +24,22 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       <div className="fixed inset-0" onClick={onClose} />
 
       {/* Modal Card */}
-      <div className="relative w-full max-w-md bg-bg-surface border border-border rounded-2xl p-6 shadow-2xl z-10 text-text-body">
+      <div className="bg-zinc-900 border border-zinc-800 relative w-full max-w-md rounded-2xl p-6 shadow-2xl z-10">
         {/* Close Button */}
         <button
           onClick={onClose}
           type="button"
-          className="absolute top-4 right-4 text-text-muted hover:text-text-heading p-1 rounded-lg transition-colors cursor-pointer"
+          className="absolute top-4 right-4 z-10 text-zinc-400 hover:text-white rounded-full p-2 transition-colors cursor-pointer"
         >
           ✕
         </button>
 
-        <h2 className="text-2xl font-bold text-text-heading mb-1">Welcome back</h2>
-        <p className="text-text-muted text-sm mb-6">Sign in to your account</p>
+        <h2 className="text-amber-400 text-2xl font-bold  mb-1">Welcome back</h2>
+        <p className="text-white text-sm mb-6">Sign in to your account</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-text-body mb-1">
+            <label className="text-white block text-xs font-medium mb-1">
               Email address
             </label>
             <input
@@ -48,12 +48,13 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full bg-bg-sunken border border-border rounded-lg px-3 py-2 text-text-heading placeholder-text-muted focus:outline-none focus:border-border-focus transition-colors"
+              autoFocus
+              className="w-full bg-bg-sunken border-2 border-border rounded-lg px-3 py-2 text-text-heading placeholder-text-muted focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-text-body mb-1">
+            <label className="text-white block text-xs font-medium mb-1">
               Password
             </label>
             <input
@@ -62,7 +63,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full bg-bg-sunken border border-border rounded-lg px-3 py-2 text-text-heading placeholder-text-muted focus:outline-none focus:border-border-focus transition-colors"
+              className="w-full bg-bg-sunken border-2 border-border rounded-lg px-3 py-2 text-text-heading placeholder-text-muted focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 transition-all"
             />
           </div>
 
