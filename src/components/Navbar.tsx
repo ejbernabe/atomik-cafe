@@ -18,6 +18,7 @@ const NAV_LINKS = {
     { label: 'Home', to: '/homeStore' },
     { label: 'Products', to: '/products' },
     { label: 'Paiwan', to: '/paiwan' },
+    { label: 'Events', to: '/events' },
     { label: 'About', to: '/about' },
   ]
 };

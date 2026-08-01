@@ -5,6 +5,7 @@ import PromoPage from './pages/PromoPage';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import MenuPage from './pages/MenuPage';
+import PaiwanPage from './pages/PaiwanPage';
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/menu" element={<MenuPage />} />
           <Route path="/promos" element={<PromoPage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/paiwan" element={<PaiwanPage />} />
         </Routes>
       </main>
     </div>

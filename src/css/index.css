@@ -1,5 +1,9 @@
 @import "tailwindcss";
 @plugin "flyonui";
+@plugin "@iconify/tailwind4"; /* https://iconify.design/docs/usage/css/tailwind/ */
+
+
+@import "flyonui/src/vendor/datatables.css"; /* https://flyonui.com/docs/third-party-plugins/datatables/ */
 
 /* https://tailwindthememaker.com/color-palette */
 @theme {
